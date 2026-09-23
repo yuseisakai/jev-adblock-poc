@@ -1,0 +1,11 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>日々の余白 — 広告クリーナー検証</title>
+<style>body{font:16px/1.8 system-ui;background:#f4f3ef;color:#273b32;margin:0}header{padding:26px 6%;background:#204b3c;color:white;font-size:22px}main{max-width:1080px;margin:24px auto;padding:0 24px;display:grid;grid-template-columns:1fr 300px;gap:32px}article{background:white;padding:24px;border-radius:12px}h1{font-size:26px}.slot{background:#ece4ca;border:1px solid #d5c596;border-radius:10px;padding:18px;margin-bottom:20px}.slot small{display:block;font-size:11px;color:#7a704b}a{color:#366043}button{padding:8px 14px}.safe{margin:16px 0;background:#e3edde;padding:14px;border-radius:8px}footer{padding:24px 6%}@media(max-width:600px){main{display:block}}</style></head><body>
+<header>日々の余白 <small> / テストページ</small></header><main><section><article id="story"><h1>静かな朝、街を歩く。</h1><p>これは通常の記事本文です。広告の仕組みについて言及しても、記事そのものは広告ではありません。</p><p>木陰でひと休みして、近所の小さな書店を訪れました。</p><div id="editorial-advice" class="safe">編集部のおすすめ：読書の時間をつくる</div><button id="story-button">記事のボタン</button></article>
+<div class="safe" id="catalog"><h2>商品一覧</h2><a href="https://example.com/item">文庫本 ¥800</a></div>
+<form id="protected-form" class="ad-slot safe"><label>メール<input name="email" value="private@example.com"></label><button>登録</button></form>
+<div id="big-ad" class="ad-slot" style="height:1000px">巨大コンテナは削除しない</div></section><aside>
+<div class="ad-slot slot" id="banner"><small>広告</small><strong>山のコーヒー 定期便</strong><p>新しい朝に、香りをひとつ。</p><a href="https://ads.example.com/buy?secret=tracking#token">詳細を見る</a></div>
+<article class="sponsored slot" id="sponsor"><small>Sponsored</small><strong>週末の宿を探す</strong><p>架空のスポンサー枠です。</p></article>
+<div class="slot" id="label-card"><span>広告</span><p>暮らしに緑を。架空の商品。</p><a href="https://example.com/plants">詳しく見る</a></div>
+<div class="safe" id="ordinary">広告についての解説。この文章は広告枠ではありません。</div>
+</aside></main><footer>検証用の合成ページです。実際の広告配信は行いません。</footer></body></html>

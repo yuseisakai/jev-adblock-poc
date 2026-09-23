@@ -1,0 +1,9 @@
+<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>Jev 広告クリーナー</title><link rel="stylesheet" href="ui.css"></head>
+<body class="popup"><header><div class="mark" aria-hidden="true">J</div><div><div class="eyebrow">A quieter page</div><h1>広告クリーナー</h1></div></header>
+<div class="origin" id="origin">サイトを確認中…</div><button class="primary" id="toggle" disabled>このページを判定・広告を削除</button>
+<label class="check"><input type="checkbox" id="automatic" disabled><span>すべてのサイトで常時オン</span></label><p class="muted">新しく開くサイトを含め、アクセス・再読み込み時に自動で判定・削除します。APIキーが設定されている間に動作します。</p>
+<label for="mode">再スキャンの動作モード</label><select id="mode"><option value="diagnostic">診断のみ（削除しない）</option><option value="remove">広告を削除</option></select>
+<div class="stats"><div class="stat"><span id="tested" class="number">0</span><small>判定した候補</small></div><div class="stat"><span id="removed" class="number">0</span><small>削除した広告</small></div></div>
+<p class="status" id="status" role="status"></p><div class="row"><button id="undo">直前を復元</button><button id="undoAll">すべて復元</button></div>
+<button class="link" id="rescan">再スキャン</button><div id="notice" role="status"></div><details><summary>最近の判定</summary><p class="muted">広告である確率（モデルの推定値）</p><div id="decisions"></div></details>
+<footer><button class="link" id="settings">APIキー・サイト設定</button><p class="muted">手動実行時、または全サイト常時オンのときに広告候補を設定した接続先のJevへ送ります。<span id="thresholdInfo">設定した確率以上の要素を削除します。</span></p></footer><script type="module" src="popup.js"></script></body></html>
