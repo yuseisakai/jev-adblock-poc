@@ -8,6 +8,25 @@ function providerUI() {
   $('providerLink').href = direct ? 'https://console.typesafe.ai' : 'https://dash.cloudflare.com/';
   $('test').disabled = !savedHasKey || $('provider').value !== savedProvider;
 }
+function renderAutomatic(s) {
+  $('automatic').checked = Boolean(s.globalAutomatic);
+  if (!Object.keys(s.policies).length) $('sites').textContent = s.globalAutomatic
+    ? '全サイトの自動実行はONです。サイト別の設定はありません。APIキー設定済みなら、共通の削除閾値90%で動作します。'
+    : 'サイト別の設定はありません。全サイトの自動実行はOFFです。';
+  for (const row of $('sites').querySelectorAll('.site')) {
+    const p = s.policies[row.dataset.origin];
+    if (!p) continue;
+    row.querySelector('.site-name').textContent = `${row.dataset.origin} · ${s.globalAutomatic ? '全サイト自動実行中' : p.enabled ? '有効' : '停止中'} · ${p.mode === 'remove' ? '削除' : '診断'}`;
+    const stop = row.querySelector('.site-stop');
+    stop.disabled = s.globalAutomatic || !p.enabled;
+    stop.title = s.globalAutomatic ? '自動実行を停止するには全サイトの常時オンをOFFにします' : '';
+  }
+}
+// Update only shared controls: preserve unsaved provider, key and threshold inputs.
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.globalAutomatic) send({ type: 'GET_SETTINGS' })
+    .then(renderAutomatic).catch(e => notice(e.message, true));
+});
 $('automatic').onchange = async () => {
   const enabled = $('automatic').checked;
   try {
@@ -27,18 +46,18 @@ async function render() {
   $('clear').disabled = !s.hasKey; providerUI();
   $('usage').textContent = `${s.budget.requests} 要求 / 入力 ${s.budget.inputTokens.toLocaleString()} トークン（現在の集計枠）`;
   $('sites').replaceChildren();
-  if (!Object.keys(s.policies).length) $('sites').textContent = 'まだ有効化したサイトはありません。';
   for (const [origin, p] of Object.entries(s.policies)) {
-    const row = document.createElement('div'); row.className = 'site';
-    const name = document.createElement('span'); name.textContent = `${origin} · ${s.globalAutomatic ? '全サイト自動実行中' : p.enabled ? '有効' : '停止中'} · ${p.mode === 'remove' ? '削除' : '診断'}`;
+    const row = document.createElement('div'); row.className = 'site'; row.dataset.origin = origin;
+    const name = document.createElement('span'); name.className = 'site-name'; name.textContent = `${origin} · ${s.globalAutomatic ? '全サイト自動実行中' : p.enabled ? '有効' : '停止中'} · ${p.mode === 'remove' ? '削除' : '診断'}`;
     const input = document.createElement('input'); input.type = 'number'; input.min = '.5'; input.max = '1'; input.step = '.01'; input.value = p.threshold; input.style.width = '85px'; input.setAttribute('aria-label', `${origin} の削除閾値`);
     const save = document.createElement('button'); save.textContent = '更新';
     save.onclick = () => action(async () => { await send({ type: 'SET_POLICY', origin, update: { ...p, threshold: Number(input.value) } }); notice('閾値を更新しました'); });
-    const stop = document.createElement('button'); stop.textContent = '停止'; stop.disabled = s.globalAutomatic || !p.enabled;
+    const stop = document.createElement('button'); stop.className = 'site-stop'; stop.textContent = '停止'; stop.disabled = s.globalAutomatic || !p.enabled;
     if (s.globalAutomatic) stop.title = '自動実行を停止するには全サイトの常時オンをOFFにします';
     stop.onclick = () => action(async () => { await send({ type: 'SET_POLICY', origin, update: { ...p, enabled: false } }); notice('このサイトを停止しました'); });
     row.append(name, input, save, stop); $('sites').append(row);
   }
+  renderAutomatic(s);
 }
 async function action(fn) { try { await fn(); await render(); } catch (e) { notice(e.message, true); } }
 $('save').onclick = () => action(async () => {

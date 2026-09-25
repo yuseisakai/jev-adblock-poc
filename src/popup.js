@@ -56,6 +56,9 @@ for (const [id, all] of [['undo', false], ['undoAll', true]]) $(id).onclick = as
   try { const r = await page({ type: 'RESTORE', all }); notice(r.failed ? describe('restore_failed') : `${r.restored}件を復元しました`, !!r.failed); await render(); } catch { notice('ページを再読み込みしてください', true); }
 };
 $('rescan').onclick = async () => { try { const result = await page({ type: 'RESCAN' }); if (!result?.ok) throw Error(describe(result?.error)); notice('選択したモードで再スキャンしました（1回50候補まで）'); } catch { notice('ページを再読み込みしてください', true); } };
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.globalAutomatic) render().catch(e => notice(e.message, true));
+});
 $('settings').onclick = () => chrome.runtime.openOptionsPage();
 try {
   [tab] = await chrome.tabs.query({ active: true, currentWindow: true }); origin = supportedPage(tab?.url) ? originOf(tab.url) : null;
