@@ -1,32 +1,34 @@
 {
   "manifest_version": 3,
-  "name": "Jev 広告クリーナー PoC",
-  "version": "0.5.2",
+  "name": "Jev-Ad blocker",
+  "version": "0.6.0",
   "minimum_chrome_version": "120",
   "description": "許可したサイトの広告候補をJevで判定。広告の削除と復元ができます。",
-  "permissions": [
-    "storage",
-    "scripting",
-    "activeTab"
-  ],
-  "host_permissions": [
-    "https://api.cloudflare.com/*",
-    "https://api.typesafe.ai/*"
-  ],
-  "optional_host_permissions": [
-    "http://*/*",
-    "https://*/*"
-  ],
+  "permissions": ["storage", "scripting", "activeTab"],
+  "host_permissions": ["https://api.cloudflare.com/*", "https://api.typesafe.ai/*"],
+  "optional_host_permissions": ["http://*/*", "https://*/*"],
   "background": {
     "service_worker": "src/background.js",
     "type": "module"
   },
   "action": {
     "default_popup": "src/popup.html",
-    "default_title": "Jev 広告クリーナー"
+    "default_title": "Jev-Ad blocker",
+    "default_icon": {
+      "16": "src/icons/icon-16.png",
+      "32": "src/icons/icon-32.png",
+      "48": "src/icons/icon-48.png",
+      "128": "src/icons/icon-128.png"
+    }
   },
   "options_page": "src/options.html",
   "content_security_policy": {
     "extension_pages": "script-src 'self'; object-src 'none'; connect-src https://api.cloudflare.com https://api.typesafe.ai"
+  },
+  "icons": {
+    "16": "src/icons/icon-16.png",
+    "32": "src/icons/icon-32.png",
+    "48": "src/icons/icon-48.png",
+    "128": "src/icons/icon-128.png"
   }
 }

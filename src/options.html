@@ -1,10 +1,93 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Jev 広告クリーナー — 設定</title><link rel="stylesheet" href="ui.css"></head>
-<body class="options"><header><div class="mark" aria-hidden="true">J</div><div><div class="eyebrow">Jev Ad Cleaner</div><h1>広告を消す。必要なら、戻す。</h1><p class="muted">利用するサイトと、AIに渡す情報を自分で選べます。</p></div></header>
-<section class="card"><h2>01 / Jevとの接続</h2><p>接続先を選び、その接続先のキーを入力して保存してください。切り替え時はキーを再入力します。キーはブラウザを閉じるまで保持され、Chrome Syncには保存しません。</p>
-<label for="provider">接続先</label><select id="provider"><option value="cloudflare">Cloudflare AI Gateway</option><option value="typesafe">TypeSafe API（直接接続）</option></select><p id="providerHelp" class="muted"></p><p><a id="providerLink" target="_blank" rel="noreferrer">API設定を開く ↗</a></p>
-<div id="gatewayFields"><label for="account">Cloudflare Account ID</label><input id="account" autocomplete="off" placeholder="32文字のAccount ID"><label for="gateway">AI Gateway ID</label><input id="gateway" value="default" autocomplete="off"></div><label id="keyLabel" for="key">Cloudflare APIトークン</label><input type="password" id="key" placeholder="APIキーを貼り付け" autocomplete="off" spellcheck="false">
-<label class="check"><input type="checkbox" id="consent"><span>有効にしたサイトの広告候補のテキスト（最大500文字）、ラベル、要素の寸法、リンク先ホストが選択した接続先を通じてTypeSafe AIへ送られ、API利用料金が発生することを確認しました。</span></label>
-<div class="row"><button class="primary" id="save">キーを保存</button><button id="test">接続テスト</button><button id="clear">キーを消去</button></div><p id="keyState" class="muted"></p><div id="notice" role="status" aria-live="polite"></div></section>
-<section class="card"><h2>02 / 自動実行・サイト設定</h2><label class="check"><input type="checkbox" id="automatic"><span>すべてのサイトで常時オン</span></label><p class="muted">ポップアップと共通の設定です。どちらか一方で切り替えると、両方に反映されます。</p><p class="muted">常時オンにすると、新しく開くすべてのWebサイトで読み込み時に判定・削除します。遅れて追加された広告も対象です。サイトごとのON操作は不要です。APIキー未設定時は待機し、OFFにすると手動実行に戻ります。下の閾値はサイトごとに適用します。</p><div id="sites"></div></section>
-<section class="card"><h2>03 / このセッションの利用量</h2><p id="usage"></p><p class="muted">1時間300要求、1回50候補まで。料金は選択した接続先の利用明細で確認できます。</p></section>
-<footer><p class="muted">広告の表示後に要素を除去する試用版です。通信・追跡の遮断や動画広告には対応していません。誤判定時は拡張機能のメニューから復元できます。復元できない場合はページを再読み込みしてください。</p></footer><script type="module" src="options.js"></script></body></html>
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Jev-Ad blocker — 設定</title>
+    <link rel="stylesheet" href="ui.css" />
+    <link rel="icon" type="image/png" href="icons/icon-32.png" />
+  </head>
+  <body class="options">
+    <header>
+      <p class="eyebrow">Jev-Ad blocker</p>
+      <h1>設定</h1>
+    </header>
+    <main>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <div class="settings-grid">
+        <section class="section">
+          <h2>APIキー</h2>
+          <p class="muted">Chromeを終了すると、キーの再入力が必要です。</p>
+          <p id="keyState" class="status"></p>
+          <form id="connectionForm" novalidate>
+            <label for="provider">接続先</label
+            ><select id="provider">
+              <option value="typesafe">TypeSafe API（直接接続）</option>
+              <option value="cloudflare">Cloudflare AI Gateway</option>
+            </select>
+            <p id="providerHelp" class="muted"></p>
+            <a id="providerLink" target="_blank" rel="noreferrer">APIキーの発行先を開く ↗</a>
+            <div id="gatewayFields">
+              <label for="account">Cloudflare Account ID ※必須</label>
+              <p class="muted" id="accountHelp">Cloudflareで表示される32文字の英数字です。</p>
+              <input id="account" autocomplete="off" aria-describedby="accountHelp" /><label for="gateway"
+                >AI Gateway ID ※必須</label
+              ><input id="gateway" value="default" autocomplete="off" />
+            </div>
+            <label id="keyLabel" for="key">APIキー ※必須</label
+            ><input type="password" id="key" autocomplete="off" spellcheck="false" />
+            <label class="check consent"
+              ><input type="checkbox" id="consent" /><span
+                >広告候補のテキストなどをTypeSafe AIへ送信し、API利用料金が発生することに同意します。</span
+              ></label
+            >
+            <div class="row">
+              <button class="primary" id="save" type="submit">キーを保存</button
+              ><button id="test" type="button">接続テスト</button
+              ><button class="link" id="clear" type="button">キーを消去</button>
+            </div>
+          </form>
+        </section>
+        <section class="section">
+          <h2>広告の削除</h2>
+          <label class="check"
+            ><input type="checkbox" id="automatic" /><span>すべてのサイトで自動判定</span></label
+          >
+          <p id="automaticState" class="muted"></p>
+          <form id="thresholdForm" novalidate>
+            <label for="threshold">広告を削除する基準</label>
+            <div class="threshold-row">
+              <input
+                id="threshold"
+                type="number"
+                min="50"
+                max="100"
+                step="1"
+                value="80"
+                required
+                aria-describedby="thresholdHelp thresholdError"
+              /><span>%</span><button type="submit">保存</button>
+            </div>
+            <p id="thresholdHelp" class="muted">初期値80%。高くすると誤削除を抑えられます（50〜100%）。</p>
+            <p id="thresholdError" class="error" role="alert"></p>
+          </form>
+        </section>
+      </div>
+      <details class="extra-info">
+        <summary>利用量・データの取り扱い</summary>
+        <p id="usage"></p>
+        <p class="muted">1時間300要求・1ページ50候補まで。API料金は提供元の利用明細で確認してください。</p>
+        <p class="muted">
+          広告候補のテキスト（最大500文字）・ラベル・寸法・リンク先などのホストを送信します。完全な匿名化は保証されません。自動判定はログイン中のページも対象です。
+        </p>
+        <a
+          href="https://github.com/yuseisakai/jev-adblock-poc/blob/main/PRIVACY.md"
+          target="_blank"
+          rel="noreferrer"
+          >プライバシーの詳細 ↗</a
+        >
+      </details>
+    </main>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

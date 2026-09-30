@@ -1,7 +1,5 @@
 node_modules/
-.env*
-*.zip
 dist/
-.DS_Store
-*.log
+*.zip
+package-lock.json
 releases/

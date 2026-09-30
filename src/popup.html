@@ -1,9 +1,69 @@
-<!doctype html><html lang="ja"><head><meta charset="utf-8"><title>Jev 広告クリーナー</title><link rel="stylesheet" href="ui.css"></head>
-<body class="popup"><header><div class="mark" aria-hidden="true">J</div><div><div class="eyebrow">A quieter page</div><h1>広告クリーナー</h1></div></header>
-<div class="origin" id="origin">サイトを確認中…</div><button class="primary" id="toggle" disabled>このページを判定・広告を削除</button>
-<label class="check"><input type="checkbox" id="automatic" disabled><span>すべてのサイトで常時オン</span></label><p class="muted">設定画面と共通の設定です。どちらか一方で切り替えると、両方に反映されます。</p><p class="muted">新しく開くサイトを含め、アクセス・再読み込み時に自動で判定・削除します。APIキーが設定されている間に動作します。</p>
-<label for="mode">再スキャンの動作モード</label><select id="mode"><option value="diagnostic">診断のみ（削除しない）</option><option value="remove">広告を削除</option></select>
-<div class="stats"><div class="stat"><span id="tested" class="number">0</span><small>判定した候補</small></div><div class="stat"><span id="removed" class="number">0</span><small>削除した広告</small></div></div>
-<p class="status" id="status" role="status"></p><div class="row"><button id="undo">直前を復元</button><button id="undoAll">すべて復元</button></div>
-<button class="link" id="rescan">再スキャン</button><div id="notice" role="status"></div><details><summary>最近の判定</summary><p class="muted">広告である確率（モデルの推定値）</p><div id="decisions"></div></details>
-<footer><button class="link" id="settings">APIキー・サイト設定</button><p class="muted">手動実行時、または全サイト常時オンのときに広告候補を設定した接続先のJevへ送ります。<span id="thresholdInfo">設定した確率以上の要素を削除します。</span></p></footer><script type="module" src="popup.js"></script></body></html>
+<!doctype html>
+<html lang="ja" class="popup-page">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Jev-Ad blocker</title>
+    <link rel="stylesheet" href="ui.css" />
+    <link rel="icon" type="image/png" href="icons/icon-32.png" />
+  </head>
+  <body class="popup">
+    <header>
+      <div class="popup-heading">
+        <h1>Jev-Ad blocker</h1>
+        <button id="settings" class="link">設定</button>
+      </div>
+      <p id="origin" class="muted">ページを確認中…</p>
+    </header>
+    <main>
+      <section class="section scan">
+        <button class="primary full" id="toggle">広告を削除</button>
+        <div class="stats">
+          <div><strong id="tested">0</strong><span>確認した候補</span></div>
+          <div><strong id="removed">0</strong><span>削除した広告</span></div>
+        </div>
+        <p id="status" role="status"></p>
+        <div class="row">
+          <button id="undo" disabled>直前を戻す</button><button id="undoAll" disabled>すべて戻す</button>
+        </div>
+      </section>
+      <section class="section">
+        <label class="check"
+          ><input type="checkbox" id="automatic" /><span>すべてのサイトで自動判定</span></label
+        >
+        <p id="automaticState" class="muted"></p>
+      </section>
+      <div id="notice" role="status" aria-live="polite"></div>
+      <details id="advanced">
+        <summary>詳細設定</summary>
+        <form id="thresholdForm" novalidate>
+          <label for="threshold">広告を削除する基準</label>
+          <div class="threshold-row">
+            <input
+              id="threshold"
+              type="number"
+              min="50"
+              max="100"
+              step="1"
+              value="80"
+              required
+              aria-describedby="thresholdHelp thresholdError"
+            /><span>%</span><button type="submit">保存</button>
+          </div>
+          <p id="thresholdHelp" class="muted">初期値80%。高くすると誤削除を抑えられます（50〜100%）。</p>
+          <p id="thresholdError" class="error" role="alert"></p>
+        </form>
+        <label for="mode">実行モード</label
+        ><select id="mode">
+          <option value="remove">広告を削除</option>
+          <option value="diagnostic">判定だけ（削除しない）</option>
+        </select>
+        <details>
+          <summary>判定結果</summary>
+          <div id="decisions"></div>
+        </details>
+      </details>
+    </main>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
