@@ -37,7 +37,7 @@ Jev-Ad blockerは、ページ内の広告候補をTypeSafeのJevで判定し、�
 
 ### 1. ZIPをダウンロードして展開する
 
-1. [このリポジトリ](https://github.com/yuseisakai/jev-adblock-poc)の上部にある **Code → Download ZIP** を選択します。
+1. [このリポジトリ](https://github.com/yuseisakai/jev-adblock)の上部にある **Code → Download ZIP** を選択します。
 2. ダウンロードしたZIPを展開します。
 3. 展開したフォルダを、削除・移動しない場所に置きます。必要なら、読み込む前にフォルダ名を `Jev-Ad-blocker` へ変更してください。
 
@@ -53,7 +53,7 @@ Jev-Ad-blocker/        ← このフォルダをChromeに読み込む
 └── ...
 ```
 
-[Releases](https://github.com/yuseisakai/jev-adblock-poc/releases)に `Jev-Ad-blocker-<バージョン>.zip` が添付されている場合は、その配布用ZIPも利用できます。添付がない場合は上記のDownload ZIPを使用してください。どちらもビルド不要です。
+[Releases](https://github.com/yuseisakai/jev-adblock/releases)に `Jev-Ad-blocker-<バージョン>.zip` が添付されている場合は、その配布用ZIPも利用できます。添付がない場合は上記のDownload ZIPを使用してください。どちらもビルド不要です。
 
 ### 2. Chromeに追加する
 
@@ -166,7 +166,7 @@ APIキーはブラウザセッション内だけに保持します。**Chromeの
 | ページの必要な部分が消えた                           | 復元する。必要なら閾値を上げる。戻せない場合は自動判定をオフにしてリロード                                                        |
 | 動画広告が消えない                                   | 非対応。ネットワーク通信・動画の再生処理は遮断しない                                                                              |
 
-解決しない場合は [Issue](https://github.com/yuseisakai/jev-adblock-poc/issues) に、拡張・Chrome・OSのバージョンと再現手順を記載してください。APIキーや機密ページの情報は貼らないでください。脆弱性の報告は [SECURITY.md](SECURITY.md) を確認してください。
+解決しない場合は [Issue](https://github.com/yuseisakai/jev-adblock/issues) に、拡張・Chrome・OSのバージョンと再現手順を記載してください。APIキーや機密ページの情報は貼らないでください。脆弱性の報告は [SECURITY.md](SECURITY.md) を確認してください。
 
 ## プライバシーと権限
 
@@ -212,8 +212,8 @@ TypeSafe直接接続は `api.typesafe.ai/v1/systemone` の `jev-latest`、Cloudf
 通常の利用は上記のZIP導入だけで完了します。コードを変更・テストする場合はNode.js 20以上を使用してください。
 
 ```sh
-git clone https://github.com/yuseisakai/jev-adblock-poc.git
-cd jev-adblock-poc
+git clone https://github.com/yuseisakai/jev-adblock.git
+cd jev-adblock
 npm ci
 npm run build
 npm test

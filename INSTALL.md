@@ -16,6 +16,6 @@
 拡張はMITライセンスですが、AI判定・接続テストにはAPI料金が発生します。広告候補の一部を外部AIへ送ります。通信・追跡・動画広告の遮断には対応していません。
 
 詳しい使い方・Cloudflareの設定・トラブル対処：
-https://github.com/yuseisakai/jev-adblock-poc#readme
+https://github.com/yuseisakai/jev-adblock#readme
 
 データの扱いは同梱のPRIVACY.md、ライセンスはLICENSEをご確認ください。
